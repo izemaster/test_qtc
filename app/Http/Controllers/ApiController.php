@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use Goutte\Client;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpKernel\HttpClientKernel;
 
 class ApiController extends Controller
 {
@@ -90,6 +93,31 @@ class ApiController extends Controller
 
 
         return view('amigas',compact('resultado'));
+
+    }
+
+    public function webscrapper(){
+        $url = 'https://www.olx.com.pe/item/toyota-corolla-xli-16-at-ano-2011-iid-1105112030';
+
+        $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false, 'timeout'=> 60]));
+        $client->setServerParameter('HTTP_USER_AGENT', "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36");
+
+
+        $crawler = $client->request('GET', $url );
+
+        $crawler->filter('span[data-aut-id=itemPrice]')->each(function ($node) {
+            echo nl2br("Precio: ".$node->text()."\n");
+        });
+
+        $crawler->filter('h1')->each(function ($node) {
+            echo nl2br("Titulo del Post: ".$node->text()."\n");
+        });
+
+        $crawler->filter('img[data-aut-id=defaultImg]')->each(function ($node) {
+            echo nl2br("URL Imagen: ".$node->attr('src')."\n");
+        });
+
+
 
     }
 }

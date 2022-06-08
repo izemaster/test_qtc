@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/uno', 'ApiController@fetch');
+Route::get('/uno', 'ApiController@webscrapper');
 Route::get('/dos', 'ApiController@ordenar');
 Route::any('/tres', 'ApiController@amigas');
 Route::get('/cuatro', 'ApiController@fetch');
